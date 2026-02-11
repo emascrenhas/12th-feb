@@ -661,281 +661,293 @@
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5fd91e6d3a.mp3?filename=pop-94319.mp3" type="audio/mpeg">
   </audio>
 
-  <script>
-    const mainMessage = document.getElementById("mainMessage");
-    const warningText = document.getElementById("warningText");
-    const silhouette = document.getElementById("silhouette");
-    const hugGlow = document.getElementById("hugGlow");
+<script>
+  const hugBtn = document.getElementById("hugBtn");
+  const mainMessage = document.getElementById("mainMessage");
+  const warningText = document.getElementById("warningText");
+  const silhouette = document.getElementById("silhouette");
+  const hugGlow = document.getElementById("hugGlow");
 
-    const bubbleArea = document.getElementById("bubbleArea");
-    const bubbleMessageList = document.getElementById("bubbleMessageList");
-    const bubbleCountText = document.getElementById("bubbleCount");
+  const bubbleArea = document.getElementById("bubbleArea");
+  const bubbleMessageList = document.getElementById("bubbleMessageList");
+  const bubbleCountText = document.getElementById("bubbleCount");
 
-    const envelopeScene = document.getElementById("envelopeScene");
-    const stamp = document.getElementById("stamp");
-    const letter = document.getElementById("letter");
-    const finalMsg = document.getElementById("finalMsg");
+  const envelopeScene = document.getElementById("envelopeScene");
+  const stamp = document.getElementById("stamp");
+  const letter = document.getElementById("letter");
+  const finalMsg = document.getElementById("finalMsg");
 
-    const bgMusic = document.getElementById("bgMusic");
-    const heartbeat = document.getElementById("heartbeat");
-    const popSound = document.getElementById("popSound");
+  const bgMusic = document.getElementById("bgMusic");
+  const heartbeat = document.getElementById("heartbeat");
+  const popSound = document.getElementById("popSound");
 
-    const redirectOverlay = document.getElementById("redirectOverlay");
-    const progressBar = document.getElementById("progressBar");
+  const redirectOverlay = document.getElementById("redirectOverlay");
+  const progressBar = document.getElementById("progressBar");
 
-    let holdTimer;
-    let holdStartTime = 0;
-    let hugUnlocked = false;
-    let audioUnlocked = false;
+  let holdTimer;
+  let holdSeconds = 0;
+  let hugUnlocked = false;
 
-    const holdTarget = 12;
+  const holdTarget = 12;
 
-    const hugMessages = [
-      "This is where you belong.",
-      "Safe.",
-      "Loved.",
-      "Home."
-    ];
+  const hugMessages = [
+    "This is where you belong.",
+    "Safe.",
+    "Loved.",
+    "Home."
+  ];
 
-    function showRedirect(callback) {
-      redirectOverlay.classList.add("show");
+  // ================================
+  // ✅ AUDIO UNLOCK FIX (IMPORTANT)
+  // ================================
+  let audioUnlocked = false;
 
-      setTimeout(() => {
-        redirectOverlay.classList.remove("show");
-        setTimeout(() => {
-          callback();
-        }, 600);
-      }, 1400);
-    }
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
 
-    function updateProgressRing(secondsHeld) {
-      const circumference = 690;
-      const progress = Math.min(secondsHeld / holdTarget, 1);
-      const offset = circumference - (circumference * progress);
-      progressBar.style.strokeDashoffset = offset;
-    }
+    // force browser to allow sound
+    [bgMusic, heartbeat, popSound].forEach(audio => {
+      audio.load();
+      audio.volume = 0.001;
 
-    function resetProgressRing() {
-      progressBar.style.strokeDashoffset = 690;
-    }
-
-    function typeMessage(lines, index = 0) {
-      if (index >= lines.length) return;
-      mainMessage.innerHTML += `<br>${lines[index]}`;
-      setTimeout(() => typeMessage(lines, index + 1), 900);
-    }
-
-    function resetText() {
-      mainMessage.innerHTML = "";
-    }
-
-    function unlockAudio() {
-      if (audioUnlocked) return;
-      audioUnlocked = true;
-
-      bgMusic.volume = 0.45;
-      bgMusic.play().catch(()=>{});
-
-      heartbeat.volume = 0.0;
-      heartbeat.play().catch(()=>{});
-      heartbeat.pause();
-    }
-
-    function startHug() {
-      if (hugUnlocked) return;
-
-      unlockAudio();
-
-      warningText.innerText = "";
-      resetText();
-      resetProgressRing();
-
-      document.body.style.background = "radial-gradient(circle at top, #4b220f, #140805)";
-      hugGlow.style.opacity = "1";
-
-      heartbeat.currentTime = 0;
-      heartbeat.volume = 0.15;
-      heartbeat.play().catch(()=>{});
-
-      silhouette.classList.add("hugging");
-
-      holdStartTime = Date.now();
-      mainMessage.innerHTML = "Hugging Ruchi...";
-
-      setTimeout(() => {
-        resetText();
-        typeMessage(hugMessages);
-      }, 650);
-
-      holdTimer = setInterval(() => {
-        const elapsed = (Date.now() - holdStartTime) / 1000;
-        updateProgressRing(elapsed);
-
-        heartbeat.volume = Math.min(0.75, heartbeat.volume + 0.02);
-
-        if (elapsed >= holdTarget) {
-          clearInterval(holdTimer);
-          unlockHug();
-        }
-      }, 80);
-    }
-
-    function stopHug() {
-      if (hugUnlocked) return;
-
-      clearInterval(holdTimer);
-
-      document.body.style.background = "radial-gradient(circle at top, #0d1b3d, #050814)";
-      hugGlow.style.opacity = "0";
-
-      silhouette.classList.remove("hugging");
-      heartbeat.pause();
-
-      warningText.innerText = "";
-
-      mainMessage.innerHTML = `
-        Don’t let go so soon 😭
-        <br><br>
-        (Your hug is still waiting...)
-      `;
-
-      resetProgressRing();
-    }
-
-    function unlockHug() {
-      hugUnlocked = true;
-      heartbeat.pause();
-
-      warningText.innerText = "";
-      mainMessage.innerHTML = "This hug is permanent. 💙";
-
-      setTimeout(() => {
-        showRedirect(() => {
-          startBubblePhase();
-        });
-      }, 1500);
-    }
-
-    // Mouse events
-    silhouette.addEventListener("mousedown", startHug);
-    silhouette.addEventListener("mouseup", stopHug);
-    silhouette.addEventListener("mouseleave", stopHug);
-
-    // Touch events
-    silhouette.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      startHug();
+      audio.play().then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+      }).catch(() => {});
     });
 
-    silhouette.addEventListener("touchend", stopHug);
+    // now set correct bg volume
+    bgMusic.volume = 0.35;
+    bgMusic.play().catch(()=>{});
+  }
 
-    const bubbleHugs = [
-      "Hug #1: For when you’re tired 💙",
-      "Hug #2: For when you overthink 🌙",
-      "Hug #3: For when you miss me 🫂",
-      "Hug #4: For when you feel alone ✨",
-      "Hug #5: For your bad days 🤍",
-      "Hug #6: For your good days 🌸",
-      "Hug #7: For your silence 🌌",
-      "Hug #8: Just because I love you 💙"
-    ];
+  // Unlock on FIRST user interaction
+  window.addEventListener("click", unlockAudio, { once: true });
+  window.addEventListener("touchstart", unlockAudio, { once: true });
 
-    let popped = 0;
+  // ================================
+  // Redirect Overlay
+  // ================================
+  function showRedirect(callback) {
+    redirectOverlay.classList.add("show");
 
-    function startBubblePhase() {
-      document.getElementById("mainContainer").classList.add("fadeOut");
-
+    setTimeout(() => {
+      redirectOverlay.classList.remove("show");
       setTimeout(() => {
-        document.getElementById("mainContainer").style.display = "none";
-        bubbleArea.style.display = "flex";
+        callback();
+      }, 600);
+    }, 1400);
+  }
 
-        setTimeout(() => {
-          bubbleArea.classList.add("show");
-        }, 100);
+  function updateProgressRing(sec) {
+    const circumference = 660;
+    const progress = Math.min(sec / holdTarget, 1);
+    const offset = circumference - (circumference * progress);
+    progressBar.style.strokeDashoffset = offset;
+  }
 
-        for (let i = 0; i < 8; i++) {
-          createBubble(i);
-        }
-      }, 900);
-    }
+  function resetProgressRing() {
+    progressBar.style.strokeDashoffset = 660;
+  }
 
-    function createBubble(index) {
-      const bubble = document.createElement("div");
-      bubble.classList.add("bubble");
-      bubble.innerHTML = "💙";
+  function typeMessage(lines, index = 0) {
+    if (index >= lines.length) return;
 
-      bubble.style.left = Math.random() * 80 + 10 + "%";
-      bubble.style.animationDuration = (9 + Math.random() * 4) + "s";
-      bubble.style.animationDelay = (Math.random() * 2) + "s";
+    mainMessage.innerHTML += `<br>${lines[index]}`;
+    setTimeout(() => typeMessage(lines, index + 1), 900);
+  }
 
-      bubble.addEventListener("click", () => {
-        if (bubble.classList.contains("pop")) return;
+  function resetText() {
+    mainMessage.innerHTML = "";
+  }
 
-        bubble.classList.add("pop");
+  function startHug() {
+    if (hugUnlocked) return;
 
-        popSound.currentTime = 0;
-        popSound.volume = 0.35;
-        popSound.play().catch(()=>{});
+    // 🔥 ensure audio is unlocked before playing heartbeat
+    unlockAudio();
 
-        popped++;
-        bubbleCountText.innerText = `Bubbles popped: ${popped}/8`;
+    warningText.innerText = "";
+    resetText();
+    resetProgressRing();
 
-        const msg = document.createElement("p");
-        msg.innerText = bubbleHugs[index];
-        bubbleMessageList.appendChild(msg);
+    document.body.style.background = "radial-gradient(circle at top, #4b220f, #140805)";
+    hugGlow.style.opacity = "1";
 
-        bubbleMessageList.scrollTop = bubbleMessageList.scrollHeight;
+    heartbeat.volume = 0.1;
+    heartbeat.currentTime = 0;
+    heartbeat.play().catch(()=>{});
 
-        setTimeout(() => {
-          bubble.remove();
-        }, 350);
+    silhouette.style.boxShadow = "0px 0px 40px rgba(255,190,130,0.35)";
+    silhouette.style.transform = "scale(1.05)";
 
-        if (popped === 8) {
-          setTimeout(() => {
-            showRedirect(() => {
-              startEnvelopeScene();
-            });
-          }, 1500);
-        }
+    holdSeconds = 0;
+    mainMessage.innerHTML = "Hugging Ruchi...";
+
+    setTimeout(() => {
+      resetText();
+      typeMessage(hugMessages);
+    }, 700);
+
+    holdTimer = setInterval(() => {
+      holdSeconds++;
+      updateProgressRing(holdSeconds);
+
+      heartbeat.volume = Math.min(0.65, heartbeat.volume + 0.05);
+
+      if (holdSeconds >= holdTarget) {
+        clearInterval(holdTimer);
+        unlockHug();
+      }
+    }, 1000);
+  }
+
+  function stopHug() {
+    if (hugUnlocked) return;
+
+    clearInterval(holdTimer);
+
+    document.body.style.background = "radial-gradient(circle at top, #0d1b3d, #050814)";
+    hugGlow.style.opacity = "0";
+
+    silhouette.style.boxShadow = "0px 0px 25px rgba(150, 200, 255, 0.18)";
+    silhouette.style.transform = "scale(1)";
+
+    heartbeat.pause();
+
+    warningText.innerText = "Don’t let go so soon 😭";
+    mainMessage.innerHTML = "Don’t let go so soon 😭";
+
+    resetProgressRing();
+  }
+
+  function unlockHug() {
+    hugUnlocked = true;
+    heartbeat.pause();
+
+    warningText.innerText = "";
+    mainMessage.innerHTML = "This hug is permanent. 💙";
+
+    setTimeout(() => {
+      showRedirect(() => {
+        startBubblePhase();
       });
+    }, 1500);
+  }
 
-      bubbleArea.appendChild(bubble);
-    }
+  // Hug Button Events
+  hugBtn.addEventListener("mousedown", startHug);
+  hugBtn.addEventListener("mouseup", stopHug);
+  hugBtn.addEventListener("mouseleave", stopHug);
 
-    function startEnvelopeScene() {
-      bubbleArea.classList.remove("show");
+  hugBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    startHug();
+  });
+
+  hugBtn.addEventListener("touchend", stopHug);
+
+  // Bubble Phase
+  const bubbleHugs = [
+    "Hug #1: For when you’re tired 💙",
+    "Hug #2: For when you overthink 🌙",
+    "Hug #3: For when you miss me 🫂",
+    "Hug #4: For when you feel alone ✨",
+    "Hug #5: For your bad days 🤍",
+    "Hug #6: For your good days 🌸",
+    "Hug #7: For your silence 🌌",
+    "Hug #8: Just because I love you 💙"
+  ];
+
+  let popped = 0;
+
+  function startBubblePhase() {
+    document.getElementById("mainContainer").classList.add("fadeOut");
+
+    setTimeout(() => {
+      document.getElementById("mainContainer").style.display = "none";
+      bubbleArea.style.display = "flex";
 
       setTimeout(() => {
-        bubbleArea.style.display = "none";
-        envelopeScene.style.display = "flex";
+        bubbleArea.classList.add("show");
+      }, 100);
 
+      for (let i = 0; i < 8; i++) {
+        createBubble(i);
+      }
+    }, 900);
+  }
+
+  function createBubble(index) {
+    const bubble = document.createElement("div");
+    bubble.classList.add("bubble");
+    bubble.innerHTML = "💙";
+
+    bubble.style.left = Math.random() * 80 + 10 + "%";
+    bubble.style.animationDuration = (9 + Math.random() * 4) + "s";
+    bubble.style.animationDelay = (Math.random() * 2) + "s";
+
+    bubble.addEventListener("click", () => {
+      if (bubble.classList.contains("pop")) return;
+
+      bubble.classList.add("pop");
+
+      // 🔥 unlock audio + play pop sound safely
+      unlockAudio();
+      popSound.currentTime = 0;
+      popSound.volume = 0.45;
+      popSound.play().catch(()=>{});
+
+      popped++;
+      bubbleCountText.innerText = `Bubbles popped: ${popped}/8`;
+
+      const msg = document.createElement("p");
+      msg.innerText = bubbleHugs[index];
+      bubbleMessageList.appendChild(msg);
+
+      setTimeout(() => {
+        bubble.remove();
+      }, 350);
+
+      if (popped === 8) {
         setTimeout(() => {
-          envelopeScene.classList.add("show");
-        }, 100);
+          showRedirect(() => {
+            startEnvelopeScene();
+          });
+        }, 1500);
+      }
+    });
 
-        setTimeout(() => {
-          stamp.classList.add("show");
-        }, 900);
+    bubbleArea.appendChild(bubble);
+  }
 
-        setTimeout(() => {
-          letter.classList.add("show");
-        }, 1700);
+  // Envelope Scene
+  function startEnvelopeScene() {
+    bubbleArea.classList.remove("show");
 
-        setTimeout(() => {
-          finalMsg.classList.add("show");
-        }, 2900);
+    setTimeout(() => {
+      bubbleArea.style.display = "none";
+      envelopeScene.style.display = "flex";
 
+      setTimeout(() => {
+        envelopeScene.classList.add("show");
+      }, 100);
+
+      setTimeout(() => {
+        stamp.classList.add("show");
       }, 900);
-    }
 
-    // Strong audio unlock trick (mobile-safe)
-    window.addEventListener("touchstart", () => {
-      unlockAudio();
-    }, { once: true });
+      setTimeout(() => {
+        letter.classList.add("show");
+      }, 1700);
 
-    window.addEventListener("click", () => {
-      unlockAudio();
-    }, { once: true });
-  </script>
+      setTimeout(() => {
+        finalMsg.classList.add("show");
+      }, 2900);
+
+    }, 900);
+  }
+      </script>
 </body>
 </html>
