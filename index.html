@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hug Day for Ruchi 💙</title>
+  <title>🫂🌸💙</title>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap');
@@ -584,10 +584,14 @@
 
   <!-- Main Page -->
   <div class="container" id="mainContainer">
-    <h1>Happy Hug Day, Ruchi 💙</h1>
+    <h1>Happy Hug Day, my all time favorite Ruchi 🥹🫂💓</h1>
     <div class="subtitle">
-      Some hugs don’t need distance...  
-      they just need time.
+      Sending virtual hugs 🫂 
+      kya kre bhyii<br>
+      long distance me taras gye hum to deedar ko bhi<br>
+      aisa lgta hai ki gale lgaye hue to jaise arsa ho gya ho..🥺<br>
+      koi nhi will see you soon and will hug you so tight<br>
+      and wont let you go anywhere 🥹💕
     </div>
 
     <div class="mainMessage" id="mainMessage">
@@ -611,7 +615,7 @@
       </div>
     </div>
 
-    <div class="holdText">Tap and hold to hug…</div>
+    <div class="holdText">Tap and hold to hug…🙂‍↔️</div>
     <div class="holdHint">(Hold for 12 seconds)</div>
 
     <div class="warning" id="warningText"></div>
@@ -632,17 +636,23 @@
     <div class="envelope">
       <div class="stamp" id="stamp">💙</div>
       <div class="letter" id="letter">
-        Delivered: Hug + Love + Forever.
+        Delivered:<br> Hug + Love Forever🥹🫀.
       </div>
     </div>
 
     <div class="finalMsg" id="finalMsg">
       Ruchi...  
-      this hug is permanent.  
+      the peace the sukoon when i hug you is permanent<br>
+      and i really miss you yrr💞<br>
+      sach khu to i want you to be in my arms 
+      and sleep like a baby 🥺🎀
       <br><br>
-      Safe. Loved. Home.  
+      You will be Safe and Loved in my arms and
+      i will hold you and never let you go🤞🥀
       <br><br>
-      And yes… I’m always here.  
+      And yes… I’m always here for you 
+      and i am only yours 🫂💖 
+      and I Love You a lot🌷
       <br><br>
       — Yours, Yash ❤️
     </div>
@@ -693,9 +703,8 @@
 
   const hugMessages = [
     "This is where you belong.",
-    "Safe.",
-    "Loved.",
-    "Home."
+    "I mean.. In my arms 🥹",
+    "Safe💕 and Loved❤️.",
   ];
 
   let audioUnlocked = false;
@@ -762,7 +771,7 @@
     silhouette.classList.add("hugging");
 
     holdStartTime = Date.now();
-    mainMessage.innerHTML = "Hugging Ruchi...";
+    mainMessage.innerHTML = "Hugging Ruchi...🥹";
 
     setTimeout(() => {
       resetText();
@@ -805,7 +814,7 @@
     heartbeat.pause();
 
     warningText.innerText = "";
-    mainMessage.innerHTML = "This hug is permanent. 💙";
+    mainMessage.innerHTML = "This hug is permanent.🌹💙";
 
     setTimeout(() => {
       showRedirect(() => {
@@ -826,14 +835,14 @@
   silhouette.addEventListener("touchend", stopHug);
 
   const bubbleHugs = [
-    "Hug #1: For when you’re tired 💙",
-    "Hug #2: For when you overthink 🌙",
-    "Hug #3: For when you miss me 🫂",
-    "Hug #4: For when you feel alone ✨",
-    "Hug #5: For your bad days 🤍",
-    "Hug #6: For your good days 🌸",
-    "Hug #7: For your silence 🌌",
-    "Hug #8: Just because I love you 💙"
+    "🎀🫂💖 Promise to hug you when you’re tired 🌹",
+    "🎀🫂💖 Promise to hug you when you overthink 🦭",
+    "🎀🫂💖 Promise to hug you when you miss me 🫶",
+    "🎀🫂💖 Promise to hug you when you feel alone ✨",
+    "🎀🫂💖 Promise to hug you in your bad days 🤍",
+    "🎀🫂💖 Promise to hug you in your good days 🌸",
+    "🎀🫂💖 Promise to give you a hug in your silence 🤞",
+    "🎀🫂💖 Promose to hug you just because I love you 💙"
   ];
 
   let popped = 0;
@@ -858,7 +867,7 @@
   function createBubble(index) {
     const bubble = document.createElement("div");
     bubble.classList.add("bubble");
-    bubble.innerHTML = "💙";
+    bubble.innerHTML = "💕";
 
     bubble.style.left = Math.random() * 80 + 10 + "%";
     bubble.style.animationDuration = (9 + Math.random() * 4) + "s";
