@@ -108,7 +108,7 @@
       height: 210px;
       margin: 15px auto;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.18), rgba(255,255,255,0.03));
+      background: radial-gradient(circle at top, rgba(255,255,255,0.20), rgba(255,255,255,0.04));
       display: flex;
       justify-content: center;
       align-items: center;
@@ -124,9 +124,9 @@
       position: relative;
       width: 170px;
       height: 170px;
-      opacity: 0.65;
+      opacity: 0.95;
       transition: all 1.2s ease;
-      filter: drop-shadow(0px 0px 14px rgba(255,255,255,0.15));
+      filter: drop-shadow(0px 0px 14px rgba(0,0,0,0.4));
     }
 
     .personLeft,
@@ -136,8 +136,9 @@
       height: 140px;
       top: 15px;
       border-radius: 50px;
-      background: rgba(255,255,255,0.75);
       transition: all 1.2s ease;
+      background: linear-gradient(180deg, rgba(110,170,255,0.95), rgba(70,90,190,0.85));
+      box-shadow: inset 0px 0px 10px rgba(255,255,255,0.08);
     }
 
     .personLeft {
@@ -148,6 +149,7 @@
     .personRight {
       right: 5px;
       transform: rotate(5deg);
+      background: linear-gradient(180deg, rgba(170,130,255,0.95), rgba(90,70,190,0.85));
     }
 
     /* heads */
@@ -160,7 +162,12 @@
       width: 55px;
       height: 55px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.8);
+      background: linear-gradient(180deg, rgba(160,210,255,0.95), rgba(80,120,220,0.85));
+      box-shadow: inset 0px 0px 10px rgba(255,255,255,0.12);
+    }
+
+    .personRight::before {
+      background: linear-gradient(180deg, rgba(210,170,255,0.95), rgba(120,90,220,0.85));
     }
 
     /* arms */
@@ -172,9 +179,13 @@
       width: 70px;
       height: 25px;
       border-radius: 25px;
-      background: rgba(255,255,255,0.65);
-      opacity: 0.9;
+      opacity: 0.95;
       transition: all 1.2s ease;
+      background: linear-gradient(180deg, rgba(190,230,255,0.9), rgba(90,120,220,0.85));
+    }
+
+    .personRight::after {
+      background: linear-gradient(180deg, rgba(235,205,255,0.9), rgba(120,90,220,0.85));
     }
 
     .personLeft::after {
@@ -193,7 +204,7 @@
       inset: 0;
       border-radius: 50%;
       opacity: 0;
-      background: radial-gradient(circle at center, rgba(255,200,150,0.45), transparent 65%);
+      background: radial-gradient(circle at center, rgba(255,200,150,0.55), transparent 65%);
       transform: scale(0.9);
       transition: opacity 1.2s ease, transform 1.2s ease;
       pointer-events: none;
@@ -206,9 +217,16 @@
     }
 
     .hugging .hugCouple {
-      opacity: 0.9;
-      transform: scale(1.04);
+      opacity: 1;
+      transform: scale(1.06) translateY(-2px);
       filter: drop-shadow(0px 0px 22px rgba(255,210,170,0.35));
+      animation: microHug 1.4s ease-in-out infinite;
+    }
+
+    @keyframes microHug {
+      0% { transform: scale(1.06) translateY(-2px); }
+      50% { transform: scale(1.08) translateY(-4px); }
+      100% { transform: scale(1.06) translateY(-2px); }
     }
 
     .hugging .personLeft {
@@ -629,17 +647,17 @@
   </div>
 
   <!-- Music -->
-  <audio id="bgMusic" loop>
+  <audio id="bgMusic" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_36e6b97c0c.mp3?filename=romantic-piano-112191.mp3" type="audio/mpeg">
   </audio>
 
   <!-- Heartbeat -->
-  <audio id="heartbeat" loop>
+  <audio id="heartbeat" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9d0a7c8c45.mp3?filename=heartbeat-102060.mp3" type="audio/mpeg">
   </audio>
 
   <!-- Pop Sound -->
-  <audio id="popSound">
+  <audio id="popSound" preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5fd91e6d3a.mp3?filename=pop-94319.mp3" type="audio/mpeg">
   </audio>
 
@@ -668,6 +686,7 @@
     let holdTimer;
     let holdStartTime = 0;
     let hugUnlocked = false;
+    let audioUnlocked = false;
 
     const holdTarget = 12;
 
@@ -711,6 +730,9 @@
     }
 
     function unlockAudio() {
+      if (audioUnlocked) return;
+      audioUnlocked = true;
+
       bgMusic.volume = 0.45;
       bgMusic.play().catch(()=>{});
 
@@ -767,11 +789,15 @@
       hugGlow.style.opacity = "0";
 
       silhouette.classList.remove("hugging");
-
       heartbeat.pause();
 
-      warningText.innerText = "Don’t let go so soon 😭";
-      mainMessage.innerHTML = "(Your hug is still waiting...)";
+      warningText.innerText = "";
+
+      mainMessage.innerHTML = `
+        Don’t let go so soon 😭
+        <br><br>
+        (Your hug is still waiting...)
+      `;
 
       resetProgressRing();
     }
@@ -790,10 +816,12 @@
       }, 1500);
     }
 
+    // Mouse events
     silhouette.addEventListener("mousedown", startHug);
     silhouette.addEventListener("mouseup", stopHug);
     silhouette.addEventListener("mouseleave", stopHug);
 
+    // Touch events
     silhouette.addEventListener("touchstart", (e) => {
       e.preventDefault();
       startHug();
@@ -900,13 +928,14 @@
       }, 900);
     }
 
-    window.addEventListener("click", () => {
-      bgMusic.play().catch(()=>{});
-    });
-
+    // Strong audio unlock trick (mobile-safe)
     window.addEventListener("touchstart", () => {
-      bgMusic.play().catch(()=>{});
-    });
+      unlockAudio();
+    }, { once: true });
+
+    window.addEventListener("click", () => {
+      unlockAudio();
+    }, { once: true });
   </script>
 </body>
 </html>
