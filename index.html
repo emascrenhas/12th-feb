@@ -82,23 +82,24 @@
 
     /* MAIN MESSAGE ABOVE SILHOUETTE */
     .mainMessage {
-      font-size: 1.15rem;
-      line-height: 1.7;
-      padding: 14px 14px;
+      font-size: 1.2rem;
+      line-height: 1.75;
+      padding: 16px 16px;
       border-radius: 14px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
       margin-bottom: 18px;
-      min-height: 100px;
-      font-weight: 600;
+      min-height: 110px;
+      font-weight: 700;
       color: #e5f2ff;
-      text-shadow: 0px 0px 12px rgba(120, 190, 255, 0.2);
+      text-shadow: 0px 0px 14px rgba(120, 190, 255, 0.25);
+      transition: all 0.8s ease;
     }
 
     /* SILHOUETTE WRAPPER WITH METER */
     .silhouetteWrap {
-      width: 230px;
-      height: 230px;
+      width: 240px;
+      height: 240px;
       margin: 0 auto 18px auto;
       position: relative;
     }
@@ -106,25 +107,38 @@
     .silhouette {
       width: 210px;
       height: 210px;
-      margin: 10px auto;
+      margin: 15px auto;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.16), rgba(255,255,255,0.03));
+      background: radial-gradient(circle, rgba(255,255,255,0.18), rgba(255,255,255,0.03));
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
       overflow: hidden;
       box-shadow: 0px 0px 25px rgba(150, 200, 255, 0.18);
-      transition: all 2s ease;
+      transition: all 1.4s ease;
+      cursor: pointer;
     }
 
-    /* COUPLE SILHOUETTE ICON */
-    .silhouette::after {
-      content: "🫂";
-      font-size: 6.5rem;
-      opacity: 0.55;
-      filter: drop-shadow(0px 0px 12px rgba(255,255,255,0.2));
-      transition: transform 1.5s ease, opacity 1.5s ease;
+    /* REAL SILHOUETTE SVG */
+    .silhouette svg {
+      width: 160px;
+      height: 160px;
+      opacity: 0.68;
+      filter: drop-shadow(0px 0px 14px rgba(255,255,255,0.12));
+      transition: all 1.2s ease;
+    }
+
+    /* Hug animation effect */
+    .hugging {
+      transform: scale(1.07);
+      box-shadow: 0px 0px 45px rgba(255,190,130,0.38);
+    }
+
+    .hugging svg {
+      transform: scale(1.06);
+      opacity: 0.88;
+      filter: drop-shadow(0px 0px 18px rgba(255,210,170,0.25));
     }
 
     /* CIRCULAR METER */
@@ -132,9 +146,10 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 230px;
-      height: 230px;
+      width: 240px;
+      height: 240px;
       transform: rotate(-90deg);
+      pointer-events: none;
     }
 
     .progressRing circle {
@@ -149,8 +164,8 @@
 
     .progressBar {
       stroke: rgba(130, 200, 255, 0.9);
-      stroke-dasharray: 660;
-      stroke-dashoffset: 660;
+      stroke-dasharray: 690;
+      stroke-dashoffset: 690;
       transition: stroke-dashoffset 0.25s linear;
       filter: drop-shadow(0px 0px 10px rgba(120,190,255,0.4));
     }
@@ -167,24 +182,6 @@
       font-size: 0.85rem;
       opacity: 0.7;
       margin-top: 6px;
-    }
-
-    .hugButton {
-      margin-top: 18px;
-      padding: 14px 22px;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #6bb7ff, #3a78ff);
-      color: white;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      box-shadow: 0px 0px 20px rgba(70, 140, 255, 0.35);
-    }
-
-    .hugButton:active {
-      transform: scale(0.95);
     }
 
     .warning {
@@ -254,7 +251,7 @@
 
     .bubbleMessageList p {
       margin-bottom: 10px;
-      font-weight: 600;
+      font-weight: 700;
       opacity: 0;
       transform: translateY(12px);
       animation: msgFadeIn 0.6s ease forwards;
@@ -443,7 +440,6 @@
       opacity: 0.8;
       font-family: "Quicksand", sans-serif;
     }
-
   </style>
 </head>
 
@@ -475,17 +471,23 @@
 
       <!-- Progress Ring -->
       <svg class="progressRing">
-        <circle class="progressBg" cx="115" cy="115" r="105"></circle>
-        <circle class="progressBar" id="progressBar" cx="115" cy="115" r="105"></circle>
+        <circle class="progressBg" cx="120" cy="120" r="110"></circle>
+        <circle class="progressBar" id="progressBar" cx="120" cy="120" r="110"></circle>
       </svg>
 
-      <div class="silhouette" id="silhouette"></div>
+      <div class="silhouette" id="silhouette">
+        <!-- Simple couple silhouette -->
+        <svg viewBox="0 0 200 200">
+          <path fill="rgba(255,255,255,0.7)" d="M78 85c10 0 18-8 18-18s-8-18-18-18-18 8-18 18 8 18 18 18zm48 0c10 0 18-8 18-18s-8-18-18-18-18 8-18 18 8 18 18 18z"/>
+          <path fill="rgba(255,255,255,0.6)" d="M52 155c0-24 18-40 44-40s44 16 44 40v10H52v-10z"/>
+          <path fill="rgba(255,255,255,0.55)" d="M36 155c0-18 14-32 32-32 12 0 22 6 28 15-6 4-10 10-10 17v10H36v-10z"/>
+          <path fill="rgba(255,255,255,0.55)" d="M132 155c0-18-14-32-32-32-12 0-22 6-28 15 6 4 10 10 10 17v10h50v-10z"/>
+        </svg>
+      </div>
     </div>
 
     <div class="holdText">Tap and hold to hug…</div>
     <div class="holdHint">(Hold for 12 seconds)</div>
-
-    <button class="hugButton" id="hugBtn">Hold Me 🤍</button>
 
     <div class="warning" id="warningText"></div>
   </div>
@@ -522,22 +524,21 @@
   </div>
 
   <!-- Music -->
-  <audio id="bgMusic" autoplay loop>
+  <audio id="bgMusic" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_36e6b97c0c.mp3?filename=romantic-piano-112191.mp3" type="audio/mpeg">
   </audio>
 
   <!-- Heartbeat -->
-  <audio id="heartbeat">
+  <audio id="heartbeat" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9d0a7c8c45.mp3?filename=heartbeat-102060.mp3" type="audio/mpeg">
   </audio>
 
   <!-- Pop Sound -->
   <audio id="popSound">
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5fd91e6d3a.mp3?filename=pop-94319.mp3?filename=pop-94319.mp3" type="audio/mpeg">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5fd91e6d3a.mp3?filename=pop-94319.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    const hugBtn = document.getElementById("hugBtn");
     const mainMessage = document.getElementById("mainMessage");
     const warningText = document.getElementById("warningText");
     const silhouette = document.getElementById("silhouette");
@@ -557,7 +558,6 @@
     const popSound = document.getElementById("popSound");
 
     const redirectOverlay = document.getElementById("redirectOverlay");
-
     const progressBar = document.getElementById("progressBar");
 
     let holdTimer;
@@ -585,19 +585,18 @@
     }
 
     function updateProgressRing(sec) {
-      const circumference = 660;
+      const circumference = 690;
       const progress = Math.min(sec / holdTarget, 1);
       const offset = circumference - (circumference * progress);
       progressBar.style.strokeDashoffset = offset;
     }
 
     function resetProgressRing() {
-      progressBar.style.strokeDashoffset = 660;
+      progressBar.style.strokeDashoffset = 690;
     }
 
     function typeMessage(lines, index = 0) {
       if (index >= lines.length) return;
-
       mainMessage.innerHTML += `<br>${lines[index]}`;
       setTimeout(() => typeMessage(lines, index + 1), 900);
     }
@@ -606,8 +605,19 @@
       mainMessage.innerHTML = "";
     }
 
+    function tryPlayAudio() {
+      bgMusic.volume = 0.45;
+      bgMusic.play().catch(()=>{});
+
+      heartbeat.volume = 0;
+      heartbeat.play().catch(()=>{});
+      heartbeat.pause();
+    }
+
     function startHug() {
       if (hugUnlocked) return;
+
+      tryPlayAudio();
 
       warningText.innerText = "";
       resetText();
@@ -616,12 +626,11 @@
       document.body.style.background = "radial-gradient(circle at top, #4b220f, #140805)";
       hugGlow.style.opacity = "1";
 
-      heartbeat.volume = 0.1;
       heartbeat.currentTime = 0;
-      heartbeat.play();
+      heartbeat.volume = 0.12;
+      heartbeat.play().catch(()=>{});
 
-      silhouette.style.boxShadow = "0px 0px 40px rgba(255,190,130,0.35)";
-      silhouette.style.transform = "scale(1.05)";
+      silhouette.classList.add("hugging");
 
       holdSeconds = 0;
       mainMessage.innerHTML = "Hugging Ruchi...";
@@ -629,13 +638,13 @@
       setTimeout(() => {
         resetText();
         typeMessage(hugMessages);
-      }, 700);
+      }, 650);
 
       holdTimer = setInterval(() => {
         holdSeconds++;
         updateProgressRing(holdSeconds);
 
-        heartbeat.volume = Math.min(0.65, heartbeat.volume + 0.05);
+        heartbeat.volume = Math.min(0.7, heartbeat.volume + 0.05);
 
         if (holdSeconds >= holdTarget) {
           clearInterval(holdTimer);
@@ -652,8 +661,7 @@
       document.body.style.background = "radial-gradient(circle at top, #0d1b3d, #050814)";
       hugGlow.style.opacity = "0";
 
-      silhouette.style.boxShadow = "0px 0px 25px rgba(150, 200, 255, 0.18)";
-      silhouette.style.transform = "scale(1)";
+      silhouette.classList.remove("hugging");
 
       heartbeat.pause();
 
@@ -677,16 +685,17 @@
       }, 1500);
     }
 
-    hugBtn.addEventListener("mousedown", startHug);
-    hugBtn.addEventListener("mouseup", stopHug);
-    hugBtn.addEventListener("mouseleave", stopHug);
+    // Tap + Hold on silhouette
+    silhouette.addEventListener("mousedown", startHug);
+    silhouette.addEventListener("mouseup", stopHug);
+    silhouette.addEventListener("mouseleave", stopHug);
 
-    hugBtn.addEventListener("touchstart", (e) => {
+    silhouette.addEventListener("touchstart", (e) => {
       e.preventDefault();
       startHug();
     });
 
-    hugBtn.addEventListener("touchend", stopHug);
+    silhouette.addEventListener("touchend", stopHug);
 
     // Bubble Phase
     const bubbleHugs = [
@@ -735,7 +744,7 @@
 
         popSound.currentTime = 0;
         popSound.volume = 0.35;
-        popSound.play();
+        popSound.play().catch(()=>{});
 
         popped++;
         bubbleCountText.innerText = `Bubbles popped: ${popped}/8`;
@@ -796,7 +805,6 @@
     window.addEventListener("touchstart", () => {
       bgMusic.play().catch(()=>{});
     });
-
   </script>
 </body>
 </html>
