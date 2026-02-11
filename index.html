@@ -662,7 +662,6 @@
   </audio>
 
 <script>
-  const hugBtn = document.getElementById("hugBtn");
   const mainMessage = document.getElementById("mainMessage");
   const warningText = document.getElementById("warningText");
   const silhouette = document.getElementById("silhouette");
@@ -685,8 +684,8 @@
   const progressBar = document.getElementById("progressBar");
 
   let holdTimer;
-  let holdSeconds = 0;
   let hugUnlocked = false;
+  let holdStartTime = 0;
 
   const holdTarget = 12;
 
@@ -698,7 +697,7 @@
   ];
 
   // ================================
-  // ✅ AUDIO UNLOCK FIX (IMPORTANT)
+  // ✅ AUDIO UNLOCK FIX
   // ================================
   let audioUnlocked = false;
 
@@ -706,7 +705,6 @@
     if (audioUnlocked) return;
     audioUnlocked = true;
 
-    // force browser to allow sound
     [bgMusic, heartbeat, popSound].forEach(audio => {
       audio.load();
       audio.volume = 0.001;
@@ -717,12 +715,10 @@
       }).catch(() => {});
     });
 
-    // now set correct bg volume
     bgMusic.volume = 0.35;
     bgMusic.play().catch(()=>{});
   }
 
-  // Unlock on FIRST user interaction
   window.addEventListener("click", unlockAudio, { once: true });
   window.addEventListener("touchstart", unlockAudio, { once: true });
 
@@ -734,26 +730,23 @@
 
     setTimeout(() => {
       redirectOverlay.classList.remove("show");
-      setTimeout(() => {
-        callback();
-      }, 600);
+      setTimeout(() => callback(), 600);
     }, 1400);
   }
 
-  function updateProgressRing(sec) {
-    const circumference = 660;
-    const progress = Math.min(sec / holdTarget, 1);
+  function updateProgressRing(secondsHeld) {
+    const circumference = 690;
+    const progress = Math.min(secondsHeld / holdTarget, 1);
     const offset = circumference - (circumference * progress);
     progressBar.style.strokeDashoffset = offset;
   }
 
   function resetProgressRing() {
-    progressBar.style.strokeDashoffset = 660;
+    progressBar.style.strokeDashoffset = 690;
   }
 
   function typeMessage(lines, index = 0) {
     if (index >= lines.length) return;
-
     mainMessage.innerHTML += `<br>${lines[index]}`;
     setTimeout(() => typeMessage(lines, index + 1), 900);
   }
@@ -762,10 +755,12 @@
     mainMessage.innerHTML = "";
   }
 
+  // ================================
+  // Hug Logic
+  // ================================
   function startHug() {
     if (hugUnlocked) return;
 
-    // 🔥 ensure audio is unlocked before playing heartbeat
     unlockAudio();
 
     warningText.innerText = "";
@@ -775,32 +770,32 @@
     document.body.style.background = "radial-gradient(circle at top, #4b220f, #140805)";
     hugGlow.style.opacity = "1";
 
-    heartbeat.volume = 0.1;
     heartbeat.currentTime = 0;
+    heartbeat.volume = 0.15;
     heartbeat.play().catch(()=>{});
 
-    silhouette.style.boxShadow = "0px 0px 40px rgba(255,190,130,0.35)";
-    silhouette.style.transform = "scale(1.05)";
+    silhouette.classList.add("hugging");
 
-    holdSeconds = 0;
+    holdStartTime = Date.now();
     mainMessage.innerHTML = "Hugging Ruchi...";
 
     setTimeout(() => {
       resetText();
       typeMessage(hugMessages);
-    }, 700);
+    }, 650);
 
     holdTimer = setInterval(() => {
-      holdSeconds++;
-      updateProgressRing(holdSeconds);
+      const elapsed = (Date.now() - holdStartTime) / 1000;
 
-      heartbeat.volume = Math.min(0.65, heartbeat.volume + 0.05);
+      updateProgressRing(elapsed);
 
-      if (holdSeconds >= holdTarget) {
+      heartbeat.volume = Math.min(0.75, heartbeat.volume + 0.02);
+
+      if (elapsed >= holdTarget) {
         clearInterval(holdTimer);
         unlockHug();
       }
-    }, 1000);
+    }, 80);
   }
 
   function stopHug() {
@@ -811,8 +806,7 @@
     document.body.style.background = "radial-gradient(circle at top, #0d1b3d, #050814)";
     hugGlow.style.opacity = "0";
 
-    silhouette.style.boxShadow = "0px 0px 25px rgba(150, 200, 255, 0.18)";
-    silhouette.style.transform = "scale(1)";
+    silhouette.classList.remove("hugging");
 
     heartbeat.pause();
 
@@ -836,19 +830,24 @@
     }, 1500);
   }
 
-  // Hug Button Events
-  hugBtn.addEventListener("mousedown", startHug);
-  hugBtn.addEventListener("mouseup", stopHug);
-  hugBtn.addEventListener("mouseleave", stopHug);
+  // ================================
+  // IMPORTANT FIX:
+  // Hug events must be on silhouette (NOT hugBtn)
+  // ================================
+  silhouette.addEventListener("mousedown", startHug);
+  silhouette.addEventListener("mouseup", stopHug);
+  silhouette.addEventListener("mouseleave", stopHug);
 
-  hugBtn.addEventListener("touchstart", (e) => {
+  silhouette.addEventListener("touchstart", (e) => {
     e.preventDefault();
     startHug();
   });
 
-  hugBtn.addEventListener("touchend", stopHug);
+  silhouette.addEventListener("touchend", stopHug);
 
+  // ================================
   // Bubble Phase
+  // ================================
   const bubbleHugs = [
     "Hug #1: For when you’re tired 💙",
     "Hug #2: For when you overthink 🌙",
@@ -893,8 +892,8 @@
 
       bubble.classList.add("pop");
 
-      // 🔥 unlock audio + play pop sound safely
       unlockAudio();
+
       popSound.currentTime = 0;
       popSound.volume = 0.45;
       popSound.play().catch(()=>{});
@@ -905,6 +904,8 @@
       const msg = document.createElement("p");
       msg.innerText = bubbleHugs[index];
       bubbleMessageList.appendChild(msg);
+
+      bubbleMessageList.scrollTop = bubbleMessageList.scrollHeight;
 
       setTimeout(() => {
         bubble.remove();
@@ -922,7 +923,9 @@
     bubbleArea.appendChild(bubble);
   }
 
+  // ================================
   // Envelope Scene
+  // ================================
   function startEnvelopeScene() {
     bubbleArea.classList.remove("show");
 
@@ -948,6 +951,6 @@
 
     }, 900);
   }
-      </script>
+           </script>
 </body>
 </html>
