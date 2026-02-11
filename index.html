@@ -80,7 +80,6 @@
       line-height: 1.5;
     }
 
-    /* MAIN MESSAGE ABOVE SILHOUETTE */
     .mainMessage {
       font-size: 1.2rem;
       line-height: 1.75;
@@ -120,25 +119,126 @@
       cursor: pointer;
     }
 
-    /* REAL SILHOUETTE SVG */
-    .silhouette svg {
-      width: 160px;
-      height: 160px;
-      opacity: 0.68;
-      filter: drop-shadow(0px 0px 14px rgba(255,255,255,0.12));
+    /* HUG SILHOUETTE REAL LOOK */
+    .hugCouple {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      opacity: 0.65;
+      transition: all 1.2s ease;
+      filter: drop-shadow(0px 0px 14px rgba(255,255,255,0.15));
+    }
+
+    .personLeft,
+    .personRight {
+      position: absolute;
+      width: 80px;
+      height: 140px;
+      top: 15px;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.75);
       transition: all 1.2s ease;
     }
 
-    /* Hug animation effect */
-    .hugging {
-      transform: scale(1.07);
-      box-shadow: 0px 0px 45px rgba(255,190,130,0.38);
+    .personLeft {
+      left: 5px;
+      transform: rotate(-5deg);
     }
 
-    .hugging svg {
-      transform: scale(1.06);
-      opacity: 0.88;
-      filter: drop-shadow(0px 0px 18px rgba(255,210,170,0.25));
+    .personRight {
+      right: 5px;
+      transform: rotate(5deg);
+    }
+
+    /* heads */
+    .personLeft::before,
+    .personRight::before {
+      content: "";
+      position: absolute;
+      top: -28px;
+      left: 12px;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+    }
+
+    /* arms */
+    .personLeft::after,
+    .personRight::after {
+      content: "";
+      position: absolute;
+      top: 50px;
+      width: 70px;
+      height: 25px;
+      border-radius: 25px;
+      background: rgba(255,255,255,0.65);
+      opacity: 0.9;
+      transition: all 1.2s ease;
+    }
+
+    .personLeft::after {
+      left: 40px;
+      transform: rotate(25deg);
+    }
+
+    .personRight::after {
+      right: 40px;
+      transform: rotate(-25deg);
+    }
+
+    /* Hug glow pulse */
+    .hugPulse {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      opacity: 0;
+      background: radial-gradient(circle at center, rgba(255,200,150,0.45), transparent 65%);
+      transform: scale(0.9);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+      pointer-events: none;
+    }
+
+    /* Hug animation */
+    .hugging {
+      transform: scale(1.07);
+      box-shadow: 0px 0px 55px rgba(255,190,130,0.45);
+    }
+
+    .hugging .hugCouple {
+      opacity: 0.9;
+      transform: scale(1.04);
+      filter: drop-shadow(0px 0px 22px rgba(255,210,170,0.35));
+    }
+
+    .hugging .personLeft {
+      left: 28px;
+      transform: rotate(-2deg);
+    }
+
+    .hugging .personRight {
+      right: 28px;
+      transform: rotate(2deg);
+    }
+
+    .hugging .personLeft::after {
+      transform: rotate(10deg);
+    }
+
+    .hugging .personRight::after {
+      transform: rotate(-10deg);
+    }
+
+    .hugging .hugPulse {
+      opacity: 1;
+      transform: scale(1.1);
+      animation: pulseGlow 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 0.7; transform: scale(1.05); }
+      50% { opacity: 1; transform: scale(1.14); }
+      100% { opacity: 0.7; transform: scale(1.05); }
     }
 
     /* CIRCULAR METER */
@@ -166,7 +266,7 @@
       stroke: rgba(130, 200, 255, 0.9);
       stroke-dasharray: 690;
       stroke-dashoffset: 690;
-      transition: stroke-dashoffset 0.25s linear;
+      transition: stroke-dashoffset 0.08s linear;
       filter: drop-shadow(0px 0px 10px rgba(120,190,255,0.4));
     }
 
@@ -232,7 +332,6 @@
       color: #d2e9ff;
     }
 
-    /* MESSAGE LIST THAT STAYS */
     .bubbleMessageList {
       position: absolute;
       bottom: 35px;
@@ -245,8 +344,17 @@
       text-align: left;
       font-size: 1.02rem;
       line-height: 1.7;
-      max-height: 230px;
+      max-height: 240px;
       overflow-y: auto;
+    }
+
+    .bubbleMessageList::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .bubbleMessageList::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
     }
 
     .bubbleMessageList p {
@@ -462,27 +570,24 @@
       they just need time.
     </div>
 
-    <!-- MAIN MESSAGE ABOVE -->
     <div class="mainMessage" id="mainMessage">
       (Your hug is waiting...)
     </div>
 
     <div class="silhouetteWrap">
 
-      <!-- Progress Ring -->
       <svg class="progressRing">
         <circle class="progressBg" cx="120" cy="120" r="110"></circle>
         <circle class="progressBar" id="progressBar" cx="120" cy="120" r="110"></circle>
       </svg>
 
       <div class="silhouette" id="silhouette">
-        <!-- Simple couple silhouette -->
-        <svg viewBox="0 0 200 200">
-          <path fill="rgba(255,255,255,0.7)" d="M78 85c10 0 18-8 18-18s-8-18-18-18-18 8-18 18 8 18 18 18zm48 0c10 0 18-8 18-18s-8-18-18-18-18 8-18 18 8 18 18 18z"/>
-          <path fill="rgba(255,255,255,0.6)" d="M52 155c0-24 18-40 44-40s44 16 44 40v10H52v-10z"/>
-          <path fill="rgba(255,255,255,0.55)" d="M36 155c0-18 14-32 32-32 12 0 22 6 28 15-6 4-10 10-10 17v10H36v-10z"/>
-          <path fill="rgba(255,255,255,0.55)" d="M132 155c0-18-14-32-32-32-12 0-22 6-28 15 6 4 10 10 10 17v10h50v-10z"/>
-        </svg>
+        <div class="hugPulse"></div>
+
+        <div class="hugCouple">
+          <div class="personLeft"></div>
+          <div class="personRight"></div>
+        </div>
       </div>
     </div>
 
@@ -561,10 +666,10 @@
     const progressBar = document.getElementById("progressBar");
 
     let holdTimer;
-    let holdSeconds = 0;
+    let holdStartTime = 0;
     let hugUnlocked = false;
 
-    const holdTarget = 12; // 12 seconds
+    const holdTarget = 12;
 
     const hugMessages = [
       "This is where you belong.",
@@ -584,9 +689,9 @@
       }, 1400);
     }
 
-    function updateProgressRing(sec) {
+    function updateProgressRing(secondsHeld) {
       const circumference = 690;
-      const progress = Math.min(sec / holdTarget, 1);
+      const progress = Math.min(secondsHeld / holdTarget, 1);
       const offset = circumference - (circumference * progress);
       progressBar.style.strokeDashoffset = offset;
     }
@@ -605,11 +710,11 @@
       mainMessage.innerHTML = "";
     }
 
-    function tryPlayAudio() {
+    function unlockAudio() {
       bgMusic.volume = 0.45;
       bgMusic.play().catch(()=>{});
 
-      heartbeat.volume = 0;
+      heartbeat.volume = 0.0;
       heartbeat.play().catch(()=>{});
       heartbeat.pause();
     }
@@ -617,7 +722,7 @@
     function startHug() {
       if (hugUnlocked) return;
 
-      tryPlayAudio();
+      unlockAudio();
 
       warningText.innerText = "";
       resetText();
@@ -627,12 +732,12 @@
       hugGlow.style.opacity = "1";
 
       heartbeat.currentTime = 0;
-      heartbeat.volume = 0.12;
+      heartbeat.volume = 0.15;
       heartbeat.play().catch(()=>{});
 
       silhouette.classList.add("hugging");
 
-      holdSeconds = 0;
+      holdStartTime = Date.now();
       mainMessage.innerHTML = "Hugging Ruchi...";
 
       setTimeout(() => {
@@ -641,16 +746,16 @@
       }, 650);
 
       holdTimer = setInterval(() => {
-        holdSeconds++;
-        updateProgressRing(holdSeconds);
+        const elapsed = (Date.now() - holdStartTime) / 1000;
+        updateProgressRing(elapsed);
 
-        heartbeat.volume = Math.min(0.7, heartbeat.volume + 0.05);
+        heartbeat.volume = Math.min(0.75, heartbeat.volume + 0.02);
 
-        if (holdSeconds >= holdTarget) {
+        if (elapsed >= holdTarget) {
           clearInterval(holdTimer);
           unlockHug();
         }
-      }, 1000);
+      }, 80);
     }
 
     function stopHug() {
@@ -685,7 +790,6 @@
       }, 1500);
     }
 
-    // Tap + Hold on silhouette
     silhouette.addEventListener("mousedown", startHug);
     silhouette.addEventListener("mouseup", stopHug);
     silhouette.addEventListener("mouseleave", stopHug);
@@ -697,7 +801,6 @@
 
     silhouette.addEventListener("touchend", stopHug);
 
-    // Bubble Phase
     const bubbleHugs = [
       "Hug #1: For when you’re tired 💙",
       "Hug #2: For when you overthink 🌙",
@@ -749,10 +852,11 @@
         popped++;
         bubbleCountText.innerText = `Bubbles popped: ${popped}/8`;
 
-        // ADD MESSAGE THAT STAYS
         const msg = document.createElement("p");
         msg.innerText = bubbleHugs[index];
         bubbleMessageList.appendChild(msg);
+
+        bubbleMessageList.scrollTop = bubbleMessageList.scrollHeight;
 
         setTimeout(() => {
           bubble.remove();
@@ -770,7 +874,6 @@
       bubbleArea.appendChild(bubble);
     }
 
-    // Envelope Scene
     function startEnvelopeScene() {
       bubbleArea.classList.remove("show");
 
@@ -797,7 +900,6 @@
       }, 900);
     }
 
-    // Auto play music workaround (mobile)
     window.addEventListener("click", () => {
       bgMusic.play().catch(()=>{});
     });
