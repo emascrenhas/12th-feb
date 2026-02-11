@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hug Day for Ruchi 💙</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Quicksand", sans-serif;
+      user-select: none;
+    }
+
+    body {
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      background: radial-gradient(circle at top, #0d1b3d, #050814);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      transition: background 2s ease;
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(white 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.2;
+      animation: starMove 20s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes starMove {
+      from { transform: translateY(0); }
+      to { transform: translateY(120px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 5;
+      width: 92%;
+      max-width: 520px;
+      text-align: center;
+      padding: 30px 22px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0px 0px 40px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-family: "Pacifico", cursive;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: #b8d7ff;
+      text-shadow: 0px 0px 15px rgba(140, 190, 255, 0.4);
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .silhouette {
+      width: 210px;
+      height: 210px;
+      margin: 0 auto 18px auto;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0px 0px 25px rgba(150, 200, 255, 0.15);
+      transition: all 2s ease;
+    }
+
+    .silhouette::after {
+      content: "💙";
+      font-size: 5.5rem;
+      opacity: 0.25;
+      filter: blur(0.5px);
+      transition: transform 1.5s ease, opacity 1.5s ease;
+    }
+
+    .holdText {
+      margin-top: 14px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      opacity: 0.95;
+      color: #d8ebff;
+    }
+
+    .holdHint {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin-top: 6px;
+    }
+
+    .hugButton {
+      margin-top: 18px;
+      padding: 14px 22px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6bb7ff, #3a78ff);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      box-shadow: 0px 0px 20px rgba(70, 140, 255, 0.35);
+    }
+
+    .hugButton:active {
+      transform: scale(0.95);
+    }
+
+    .messageBox {
+      margin-top: 20px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      min-height: 60px;
+      opacity: 0.95;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .warning {
+      margin-top: 12px;
+      font-size: 0.95rem;
+      color: #ffb6c6;
+      opacity: 0.9;
+      min-height: 22px;
+    }
+
+    /* Bubble Phase */
+    .bubbleArea {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: radial-gradient(circle at top, rgba(0,0,0,0.6), rgba(0,0,0,0.85));
+    }
+
+    .bubbleInstruction {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 0.85rem;
+      opacity: 0.75;
+      font-family: "Pacifico", cursive;
+      color: #d2e9ff;
+      text-shadow: 0px 0px 10px rgba(120, 190, 255, 0.3);
+    }
+
+    .bubbleCount {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      font-size: 0.85rem;
+      opacity: 0.7;
+      font-weight: 600;
+      color: #d2e9ff;
+    }
+
+    .bubbleMessage {
+      position: absolute;
+      bottom: 60px;
+      width: 90%;
+      max-width: 480px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      text-align: center;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.6s ease;
+    }
+
+    .bubbleMessage.show {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    .bubble {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(140, 210, 255, 0.16);
+      border: 1px solid rgba(180, 230, 255, 0.35);
+      box-shadow: 0px 0px 18px rgba(120, 200, 255, 0.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.6rem;
+      cursor: pointer;
+      animation: floatUp 10s linear infinite;
+      backdrop-filter: blur(6px);
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(100vh); }
+      to { transform: translateY(-120px); }
+    }
+
+    .bubble.pop {
+      animation: popAnim 0.35s ease forwards;
+    }
+
+    @keyframes popAnim {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.8); opacity: 0; }
+    }
+
+    /* Envelope Scene */
+    .envelopeScene {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: radial-gradient(circle at top, rgba(15, 10, 30, 0.95), rgba(5, 5, 20, 1));
+      padding: 25px;
+      text-align: center;
+    }
+
+    .envelope {
+      width: 250px;
+      height: 160px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f8f0e8, #e7d6c8);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0px 0px 25px rgba(0,0,0,0.45);
+      margin-bottom: 22px;
+    }
+
+    .stamp {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 55px;
+      height: 55px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ff6fa8, #ff3d7f);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      box-shadow: 0px 0px 12px rgba(255,80,140,0.35);
+      opacity: 0;
+      transform: scale(0.7);
+      transition: all 0.7s ease;
+    }
+
+    .stamp.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .letter {
+      position: absolute;
+      bottom: -140px;
+      left: 10%;
+      width: 80%;
+      height: 140px;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0px 0px 15px rgba(0,0,0,0.25);
+      transition: all 1.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      text-align: center;
+      font-family: "Pacifico", cursive;
+      color: #333;
+      font-size: 1.05rem;
+    }
+
+    .letter.show {
+      bottom: 18px;
+    }
+
+    .deliveryText {
+      font-family: "Pacifico", cursive;
+      font-size: 1.8rem;
+      color: #ffd7ec;
+      margin-bottom: 12px;
+      text-shadow: 0px 0px 18px rgba(255,120,200,0.25);
+    }
+
+    .finalMsg {
+      margin-top: 15px;
+      max-width: 500px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 1.2s ease;
+      background: rgba(255,255,255,0.08);
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .finalMsg.show {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    /* Glow Hug Effect */
+    .hugGlow {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: 0;
+      background: radial-gradient(circle at center, rgba(255,200,150,0.28), transparent 65%);
+      transition: opacity 2s ease;
+      pointer-events: none;
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      animation: particleFloat 6s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes particleFloat {
+      from { transform: translateY(0); opacity: 0.6; }
+      to { transform: translateY(-120px); opacity: 0; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="stars"></div>
+  <div class="hugGlow" id="hugGlow"></div>
+
+  <!-- Main Page -->
+  <div class="container" id="mainContainer">
+    <h1>Happy Hug Day, Ruchi 💙</h1>
+    <div class="subtitle">
+      Some hugs don’t need distance...  
+      they just need time.
+    </div>
+
+    <div class="silhouette" id="silhouette"></div>
+
+    <div class="holdText">Tap and hold to hug…</div>
+    <div class="holdHint">(Hold for 6 seconds)</div>
+
+    <button class="hugButton" id="hugBtn">Hold Me 🤍</button>
+
+    <div class="messageBox" id="messageBox">
+      (Your hug is waiting...)
+    </div>
+
+    <div class="warning" id="warningText"></div>
+  </div>
+
+  <!-- Bubble Phase -->
+  <div class="bubbleArea" id="bubbleArea">
+    <div class="bubbleInstruction">Tap / pop all bubbles 💭</div>
+    <div class="bubbleCount" id="bubbleCount">Bubbles popped: 0/8</div>
+
+    <div class="bubbleMessage" id="bubbleMessage"></div>
+  </div>
+
+  <!-- Envelope Scene -->
+  <div class="envelopeScene" id="envelopeScene">
+    <div class="deliveryText">A hug is being delivered… 💌</div>
+
+    <div class="envelope">
+      <div class="stamp" id="stamp">💙</div>
+      <div class="letter" id="letter">
+        Delivered: Hug + Love + Forever.
+      </div>
+    </div>
+
+    <div class="finalMsg" id="finalMsg">
+      Ruchi...  
+      this hug is permanent.  
+      <br><br>
+      Safe. Loved. Home.  
+      <br><br>
+      And yes… I’m always here.  
+      <br><br>
+      — Yours, Yash ❤️
+    </div>
+  </div>
+
+  <!-- Music -->
+  <audio id="bgMusic" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_36e6b97c0c.mp3?filename=romantic-piano-112191.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Heartbeat -->
+  <audio id="heartbeat">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9d0a7c8c45.mp3?filename=heartbeat-102060.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Pop Sound -->
+  <audio id="popSound">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5fd91e6d3a.mp3?filename=pop-94319.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const hugBtn = document.getElementById("hugBtn");
+    const messageBox = document.getElementById("messageBox");
+    const warningText = document.getElementById("warningText");
+    const silhouette = document.getElementById("silhouette");
+    const hugGlow = document.getElementById("hugGlow");
+
+    const bubbleArea = document.getElementById("bubbleArea");
+    const bubbleMessage = document.getElementById("bubbleMessage");
+    const bubbleCountText = document.getElementById("bubbleCount");
+
+    const envelopeScene = document.getElementById("envelopeScene");
+    const stamp = document.getElementById("stamp");
+    const letter = document.getElementById("letter");
+    const finalMsg = document.getElementById("finalMsg");
+
+    const bgMusic = document.getElementById("bgMusic");
+    const heartbeat = document.getElementById("heartbeat");
+    const popSound = document.getElementById("popSound");
+
+    let holdTimer;
+    let holdSeconds = 0;
+    let hugUnlocked = false;
+
+    const hugMessages = [
+      "This is where you belong.",
+      "Safe.",
+      "Loved.",
+      "Home."
+    ];
+
+    function typeMessage(lines, index = 0) {
+      if (index >= lines.length) return;
+      messageBox.innerHTML += `<br>${lines[index]}`;
+      setTimeout(() => typeMessage(lines, index + 1), 900);
+    }
+
+    function resetText() {
+      messageBox.innerHTML = "";
+    }
+
+    function startHug() {
+      if (hugUnlocked) return;
+
+      warningText.innerText = "";
+      resetText();
+
+      document.body.style.background = "radial-gradient(circle at top, #4b220f, #140805)";
+      hugGlow.style.opacity = "1";
+
+      heartbeat.volume = 0.1;
+      heartbeat.currentTime = 0;
+      heartbeat.play();
+
+      silhouette.style.boxShadow = "0px 0px 35px rgba(255,190,130,0.35)";
+      silhouette.style.transform = "scale(1.05)";
+      silhouette.style.transition = "all 2s ease";
+
+      silhouette.querySelector("::after");
+
+      holdSeconds = 0;
+
+      messageBox.innerHTML = "Hugging Ruchi...";
+      setTimeout(() => {
+        resetText();
+        typeMessage(hugMessages);
+      }, 700);
+
+      holdTimer = setInterval(() => {
+        holdSeconds++;
+
+        heartbeat.volume = Math.min(0.6, heartbeat.volume + 0.08);
+
+        if (holdSeconds >= 6) {
+          clearInterval(holdTimer);
+          unlockHug();
+        }
+      }, 1000);
+    }
+
+    function stopHug() {
+      if (hugUnlocked) return;
+
+      clearInterval(holdTimer);
+
+      document.body.style.background = "radial-gradient(circle at top, #0d1b3d, #050814)";
+      hugGlow.style.opacity = "0";
+
+      silhouette.style.boxShadow = "0px 0px 25px rgba(150, 200, 255, 0.15)";
+      silhouette.style.transform = "scale(1)";
+
+      heartbeat.pause();
+
+      warningText.innerText = "Don’t let go so soon 😭";
+      messageBox.innerHTML = "(Your hug is still waiting...)";
+    }
+
+    function unlockHug() {
+      hugUnlocked = true;
+      heartbeat.pause();
+
+      warningText.innerText = "";
+      messageBox.innerHTML = "This hug is permanent. 💙";
+
+      setTimeout(() => {
+        startBubblePhase();
+      }, 2000);
+    }
+
+    hugBtn.addEventListener("mousedown", startHug);
+    hugBtn.addEventListener("mouseup", stopHug);
+    hugBtn.addEventListener("mouseleave", stopHug);
+
+    hugBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      startHug();
+    });
+
+    hugBtn.addEventListener("touchend", stopHug);
+
+    // Bubble Phase
+    const bubbleHugs = [
+      "Hug #1: For when you’re tired 💙",
+      "Hug #2: For when you overthink 🌙",
+      "Hug #3: For when you miss me 🫂",
+      "Hug #4: For when you feel alone ✨",
+      "Hug #5: For your bad days 🤍",
+      "Hug #6: For your good days 🌸",
+      "Hug #7: For your silence 🌌",
+      "Hug #8: Just because I love you 💙"
+    ];
+
+    let popped = 0;
+
+    function startBubblePhase() {
+      document.getElementById("mainContainer").style.display = "none";
+      bubbleArea.style.display = "flex";
+
+      for (let i = 0; i < 8; i++) {
+        createBubble(i);
+      }
+    }
+
+    function createBubble(index) {
+      const bubble = document.createElement("div");
+      bubble.classList.add("bubble");
+      bubble.innerHTML = "💙";
+
+      bubble.style.left = Math.random() * 80 + 10 + "%";
+      bubble.style.animationDuration = (8 + Math.random() * 4) + "s";
+      bubble.style.animationDelay = (Math.random() * 2) + "s";
+
+      bubble.addEventListener("click", () => {
+        if (bubble.classList.contains("pop")) return;
+
+        bubble.classList.add("pop");
+        popSound.currentTime = 0;
+        popSound.volume = 0.4;
+        popSound.play();
+
+        popped++;
+        bubbleCountText.innerText = `Bubbles popped: ${popped}/8`;
+
+        bubbleMessage.classList.remove("show");
+        setTimeout(() => {
+          bubbleMessage.innerHTML = bubbleHugs[index];
+          bubbleMessage.classList.add("show");
+        }, 200);
+
+        setTimeout(() => {
+          bubble.remove();
+        }, 350);
+
+        if (popped === 8) {
+          setTimeout(() => {
+            startEnvelopeScene();
+          }, 1200);
+        }
+      });
+
+      bubbleArea.appendChild(bubble);
+    }
+
+    // Envelope Scene
+    function startEnvelopeScene() {
+      bubbleArea.style.display = "none";
+      envelopeScene.style.display = "flex";
+
+      setTimeout(() => {
+        stamp.classList.add("show");
+      }, 800);
+
+      setTimeout(() => {
+        letter.classList.add("show");
+      }, 1600);
+
+      setTimeout(() => {
+        finalMsg.classList.add("show");
+      }, 2800);
+    }
+
+    // Auto play music workaround (mobile)
+    window.addEventListener("click", () => {
+      bgMusic.play().catch(()=>{});
+    });
+
+    window.addEventListener("touchstart", () => {
+      bgMusic.play().catch(()=>{});
+    });
+
+  </script>
+</body>
+</html>
